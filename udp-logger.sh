@@ -5,9 +5,8 @@ LOGDIR="./logs"
 mkdir $LOGDIR &> /dev/null
 while true
 do
-    ( nc -u -l $PORT &>> $LOGDIR/`date +"%Y-%m-%d-%H.log"` ) &
+    ( tcpdump udp port $PORT -A -n -nn -l -i any 2>/dev/null | grep -v -a ' eth0  In' | grep -vE '^$' | cut -c29- &>> $LOGDIR/`date +"%Y-%m-%d-%H.log"` ) &
     PID=$!
     sleep 3600
     kill $PID
 done
-
